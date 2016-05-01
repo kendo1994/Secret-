@@ -16,14 +16,6 @@ public class PlayerHealth : NetworkBehaviour {
 		DieStat = false;
 	}
 
-	[Command]
-	public void CmdDecreaseHP(){
-		if(DieStat == true){
-			return;
-		}
-		RpcHit ();
-	}
-
 	//Hit Animate
 	void SetAnimationHit(){
 		anim.SetTrigger ("Hit");
@@ -49,14 +41,24 @@ public class PlayerHealth : NetworkBehaviour {
 			CmdDecreaseHP ();
 			Destroy (col.gameObject);
 
-			//Die Animation
 			if (currentHealth <= 0) {
 				currentHealth = 0;
+				DieStat = true;
 				SetAnimationDie ();
-//				RpcDie ();
+				gameObject.SetActive (false);
 			}
 		}
 	}
+
+	[Command]
+	public void CmdDecreaseHP(){
+		if (DieStat == true) {
+			return;
+		} else {
+			RpcHit ();
+		}
+	}
+
 
 	[ClientRpc]
 	public void RpcHit(){
@@ -65,16 +67,6 @@ public class PlayerHealth : NetworkBehaviour {
 
 		float calc_hp = currentHealth / maxHealth;
 		setHP (calc_hp);
-
-		if (currentHealth <= 0) {
-			SetAnimationDie ();
-			Die ();
-		}
-	}
-		
-	void Die(){
-		DieStat = true;
-		SetAnimationDie ();
 	}
 
 }

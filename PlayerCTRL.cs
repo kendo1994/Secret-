@@ -6,8 +6,7 @@ public class PlayerCTRL : NetworkBehaviour {
 	//Player
 	[SerializeField] private int amountKnife = 0;
 	[SyncVar] private Animator anim;
-
-	private bool faceRight;
+	[SyncVar] private bool faceRight;
 
 	//bullet
 	public GameObject knifePrefab;
@@ -96,13 +95,13 @@ public class PlayerCTRL : NetworkBehaviour {
 	void CmdThrowKnife(){
 		if (faceRight == true) {
 			GameObject tmp = (GameObject)Instantiate (knifePrefab, spawnPoint.transform.position, Quaternion.Euler(new Vector3(0,0,-90)));
-			NetworkServer.Spawn (tmp);
 			tmp.GetComponent<Knife> ().Initialize (Vector2.right);
+			NetworkServer.Spawn (tmp);
 		}
 		else if (faceRight == false) {
 			GameObject tmp = (GameObject)Instantiate (knifePrefab, spawnPoint.transform.position, Quaternion.Euler(new Vector3(0,0,90)));
-			NetworkServer.Spawn (tmp);
 			tmp.GetComponent<Knife> ().Initialize (Vector2.left);
+			NetworkServer.Spawn (tmp);
 		}
 	}
 
